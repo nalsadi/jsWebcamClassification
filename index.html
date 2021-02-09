@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display Webcam Stream</title>
+ 
+<style>
+#container {
+	margin: 0px auto;
+	width: 500px;
+	height: 375px;
+	border: 10px #333 solid;
+}
+#videoElement {
+	width: 500px;
+	height: 375px;
+	background-color: #666;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+
+</head>
+ 
+<body>
+<div id="container">
+	<video autoplay="true" id="videoElement">
+	</video>
+</div>
+<div id ="pred"></div>
+<script>
+    
+    
+    var video = document.querySelector("#videoElement");
+    var predhtml = document.querySelector("#pred")
+    function detectFrame() {
+        // Load the model.
+        cocoSsd.load().then(model => {
+            // detect objects in the image.
+            predhtml.innerHTML = ""
+            model.detect(video).then(predictions => {
+            console.log('Predictions: ', predictions);
+            for(i = 0; i < predictions.length; i++){
+                var newnew = document.createElement("div")
+                newnew.innerHTML = `The Predicition is: ${predictions[i].class}`
+                predhtml.append(newnew)
+
+            }
+            // predhtml.innerHTML= `The Predicition is: ${predictions[0].class}`
+            // renderOurPredictions(predictions)
+            requestAnimationFrame(detectFrame)
+            });
+        });
+    }
+
+    if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+        video.srcObject = stream;
+        detectFrame();
+        })
+        .catch(function (err0r) {
+        console.log("Something went wrong!");
+        });
+    }
+    
+
+    
+</script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clmtrackr@1.1.2/build/clmtrackr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
+
+
+<!-- Load the coco-ssd model. -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+</body>
+</html>
